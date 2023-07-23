@@ -9,9 +9,9 @@ services:
     container_name: wg-access-server
     cap_add:
       - NET_ADMIN
-    sysctls:
-      net.ipv6.conf.all.disable_ipv6: 0
-      net.ipv6.conf.all.forwarding: 1
+    # sysctls:
+    #   net.ipv6.conf.all.disable_ipv6: 0
+    #   net.ipv6.conf.all.forwarding: 1
     volumes:
       - "wg-access-server-data:/data"
     #   - "./config.yaml:/config.yaml" # if you have a custom config file
@@ -21,9 +21,8 @@ services:
       WG_VPN_CIDRV6: 0 # to disable IPv6
     ports:
       # - "${WG_WEBSERVER_PORT:-8000}:8000/tcp"
+      - "127.0.0.1:8000:8000/tcp"
       - "${WG_WIREGUARD_PORT:-51820}:51820/udp"
-    depends_on:
-      - auth
     devices:
       - "/dev/net/tun:/dev/net/tun"
     restart: unless-stopped # restart the container on failure
@@ -32,11 +31,10 @@ services:
     build:
       dockerfile: Dockerfile
       context: ./ngnix/
-    ports:
-      # - "${WG_WEBSERVER_PORT:-8001}:80/tcp"
-      - "8001:80/tcp"
-      # - "80:80/tcp"
+    network_mode: "host"
+    # No need ports if you use network_mode: "host"
     environment:
+      NGNIX_PORT: ${NGNIX_PORT:-80}
       USER: ${WG_WEB_AUTH_USER:?\n\nplease set the WG_WEB_AUTH_USER environment variable:\n    export WG_WEB_AUTH_USER=example\n}
       PASS: ${WG_WEB_AUTH_PASS:?\n\nplease set the WG_WEB_AUTH_PASS environment variable:\n    export WG_WEB_AUTH_PASS=example\n}
 # shared volumes with the host
