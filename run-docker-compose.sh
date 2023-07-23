@@ -10,4 +10,4 @@ echo "Your automatically generated admin password for the wg-access-server's web
 cd "$SCRIPT_DIR"
 # docker-compose up --build --force-recreate --remove-orphans --detach
 # docker-compose logs -f --tail 100 wg-access-server
-docker-compose up --build --force-recreate --remove-orphans
+docker compose up --build --force-recreate --remove-orphans  
