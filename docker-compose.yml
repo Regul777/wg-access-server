@@ -20,12 +20,25 @@ services:
       WG_WIREGUARD_PRIVATE_KEY:  ${WG_WIREGUARD_PRIVATE_KEY:?\n\nplease set the WG_WIREGUARD_PRIVATE_KEY environment variable:\n    export WG_WIREGUARD_PRIVATE_KEY=$(wg genkey)\n}
       WG_VPN_CIDRV6: 0 # to disable IPv6
     ports:
-      - "${WG_WEBSERVER_PORT:-8000}:8000/tcp"
+      # - "${WG_WEBSERVER_PORT:-8000}:8000/tcp"
       - "${WG_WIREGUARD_PORT:-51820}:51820/udp"
     devices:
       - "/dev/net/tun:/dev/net/tun"
     restart: unless-stopped # restart the container on failure
-    
+  auth:
+    container_name: wg-access-server-auth
+    build:
+      dockerfile: Dockerfile
+      context: ./ngnix/
+    ports:
+      # - "${WG_WEBSERVER_PORT:-8001}:80/tcp"
+      - "8001:80/tcp"
+      # - "80:80/tcp"
+    links:
+      - wg-access-server
+    environment:
+      USER: ${WG_WEB_AUTH_USER:?\n\nplease set the WG_WEB_AUTH_USER environment variable:\n    export WG_WEB_AUTH_USER=example\n}
+      PASS: ${WG_WEB_AUTH_PASS:?\n\nplease set the WG_WEB_AUTH_PASS environment variable:\n    export WG_WEB_AUTH_PASS=example\n}
 # shared volumes with the host
 volumes:
   wg-access-server-data:
