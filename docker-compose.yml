@@ -2,10 +2,10 @@ version: "3.0"
 services:
   wg-access-server:
     # to build the docker image from the source
-    # build:
-    #   dockerfile: Dockerfile
-    #   context: .
-    image: ghcr.io/freifunkmuc/wg-access-server:latest
+    build:
+      dockerfile: Dockerfile
+      context: .
+    # image: ghcr.io/freifunkmuc/wg-access-server:latest
     container_name: wg-access-server
     cap_add:
       - NET_ADMIN
@@ -24,7 +24,8 @@ services:
       - "51820:51820/udp"
     devices:
       - "/dev/net/tun:/dev/net/tun"
-
+    restart: unless-stopped # restart the container on failure
+    
 # shared volumes with the host
 volumes:
   wg-access-server-data:
