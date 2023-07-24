@@ -26,17 +26,17 @@ services:
     devices:
       - "/dev/net/tun:/dev/net/tun"
     restart: unless-stopped # restart the container on failure
-  auth:
-    container_name: wg-access-server-auth
-    build:
-      dockerfile: Dockerfile
-      context: ./ngnix/
-    network_mode: "host"
-    # No need ports if you use network_mode: "host"
-    environment:
-      NGNIX_PORT: ${NGNIX_PORT:-80}
-      USER: ${WG_WEB_AUTH_USER:?\n\nplease set the WG_WEB_AUTH_USER environment variable:\n    export WG_WEB_AUTH_USER=example\n}
-      PASS: ${WG_WEB_AUTH_PASS:?\n\nplease set the WG_WEB_AUTH_PASS environment variable:\n    export WG_WEB_AUTH_PASS=example\n}
+  # auth:
+  #   container_name: wg-access-server-auth
+  #   build:
+  #     dockerfile: Dockerfile
+  #     context: ./ngnix/
+  #   network_mode: "host"
+  #   # No need ports if you use network_mode: "host"
+  #   environment:
+  #     NGNIX_PORT: ${NGNIX_PORT:-80}
+  #     USER: ${WG_WEB_AUTH_USER:?\n\nplease set the WG_WEB_AUTH_USER environment variable:\n    export WG_WEB_AUTH_USER=example\n}
+  #     PASS: ${WG_WEB_AUTH_PASS:?\n\nplease set the WG_WEB_AUTH_PASS environment variable:\n    export WG_WEB_AUTH_PASS=example\n}
 # shared volumes with the host
 volumes:
   wg-access-server-data:
